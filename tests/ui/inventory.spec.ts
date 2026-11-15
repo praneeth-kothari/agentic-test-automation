@@ -31,7 +31,10 @@ test.describe("Inventory Page", () => {
     await loginPage.goto();
     await loginPage.login("standard_user", "secret_sauce");
     await inventoryPage.expectLoaded();
+<<<<<<< HEAD
 
+=======
+>>>>>>> 0546daedbc27954087e2c5e960ab030cab5db21b
     const count = await inventoryPage.getItemCount();
     expect(count).toBeGreaterThan(0);
   });
@@ -40,9 +43,16 @@ test.describe("Inventory Page", () => {
     await loginPage.goto();
     await loginPage.login("standard_user", "secret_sauce");
     await inventoryPage.expectLoaded();
+<<<<<<< HEAD
 
+=======
+>>>>>>> 0546daedbc27954087e2c5e960ab030cab5db21b
     await inventoryPage.sortBy("az");
     const firstName = await inventoryPage.getFirstItemName();
     expect(firstName).toContain("Backpack");
   });
+<<<<<<< HEAD
 });
+=======
+});
+>>>>>>> 0546daedbc27954087e2c5e960ab030cab5db21b

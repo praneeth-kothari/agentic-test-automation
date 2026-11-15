@@ -83,4 +83,8 @@ jobs:
         with:
           name: cross-browser-${{ matrix.browser }}
           path: playwright-report/
+<<<<<<< HEAD
           retention-days: 7
+=======
+          retention-days: 7
+>>>>>>> 0546daedbc27954087e2c5e960ab030cab5db21b

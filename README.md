@@ -1,46 +1,75 @@
 # Agentic Test Automation
 
-**Three core agents that plan, generate, and self-heal Playwright test suites.**
+**Three core agents that plan, generate, and self-heal Playwright test suites using POM.**
 
-Inspired by the BMAD methodology — each agent has a persona, a defined skill, and a structured output contract.
+| Agent | Persona | Input | Output |
+|-------|---------|-------|--------|
+| Planner | Aria (QA Strategist) | URL + seed | specs/*.md |
+| Generator | Bolt (Automation Engineer) | specs/*.md | pages/*.ts + tests/*.spec.ts |
+| Healer | Patch (Self-Healing Specialist) | Failing results | Patched pages/ + tests/ |
 
-## The Three Core Agents
-
-| Agent | Persona | Input | Output | What it does |
-|-------|---------|-------|--------|-------------|
-| **Planner** | Aria (QA Strategist) | URL + seed action | `specs/*.md` | Explores the application, discovers interactive elements, and writes structured Markdown test plans |
-| **Generator** | Bolt (Automation Engineer) | `specs/*.md` | `tests/*.spec.ts` | Converts Markdown plans into executable, reliable Playwright TypeScript scripts |
-| **Healer** | Patch (Self-Healing Specialist) | Failing test results | Patched `tests/*.spec.ts` | Replays failing tests, inspects UI changes and logs, patches broken locators or logic until tests pass |
-
-## How it works
+## POM Structure
 
 ```
-┌──────────────┐     ┌──────────────┐     ┌──────────────┐
-│   PLANNER    │     │  GENERATOR   │     │    HEALER    │
-│  (Aria)      │     │  (Bolt)      │     │  (Patch)     │
-│              │     │              │     │              │
-│ Explores app │────▶│ Reads specs  │────▶│ Runs tests   │
-│ Discovers    │     │ Generates    │     │ Detects      │
-│ elements     │     │ Playwright   │     │ failures     │
-│ Writes       │     │ TypeScript   │     │ Patches      │
-│ test plans   │     │ test files   │     │ locators     │
-│ in specs/    │     │ in tests/    │     │ Re-runs      │
-└──────────────┘     └──────────────┘     └──────────────┘
+├── pages/                     # Page Object Model
+│   ├── LoginPage.ts
+│   ├── InventoryPage.ts
+│   └── index.ts
+├── fixtures/                  # Playwright fixtures
+│   └── fixtures.ts            # Injects page objects into tests
+├── agents/                    # The three core agents
+│   ├── planner.ts
+│   ├── generator.ts
+│   ├── healer.ts
+│   └── index.ts
+├── specs/                     # Generated test plans
+├── tests/
+│   ├── ui/                    # UI tests using POM fixtures
+│   └── api/                   # API tests (REST, auth, headers)
+├── playwright.config.ts
+├── run.ts                     # Pipeline orchestrator
+└── README.md
 ```
 
 ## Quickstart
 
 ```bash
-pip install -r requirements.txt
 npm install
 npx playwright install chromium
-bash run.sh "https://www.saucedemo.com" "login and browse inventory"
+npx tsx run.ts "https://www.saucedemo.com" "login and browse inventory"
 ```
 
-## Healenium self-healing demo
+## Run individually
 
-See [`healenium/README.md`](healenium/README.md) for a Java/Selenium demo
-of Healenium locator self-repair.
+```bash
+npx tsx agents/planner.ts --url "https://www.saucedemo.com" --seed "login"
+npx tsx agents/generator.ts --specs specs/ --output tests/
+npx playwright test
+npx tsx agents/healer.ts --tests tests/
+```
+
+## POM Pattern
+
+```typescript
+// fixtures/fixtures.ts
+export const test = base.extend<PageFixtures>({
+  loginPage: async ({ page }, use) => {
+    await use(new LoginPage(page));
+  },
+});
+
+// tests/ui/inventory.spec.ts
+import { test, expect } from "../../fixtures/fixtures";
+test("TC-001", async ({ loginPage, inventoryPage }) => {
+  await loginPage.goto();
+  await loginPage.login("standard_user", "secret_sauce");
+  await inventoryPage.expectLoaded();
+});
+```
+
+## API Testing
+
+10 API tests against ReqRes.in covering CRUD, auth, headers, and response time.
 
 ## License
 

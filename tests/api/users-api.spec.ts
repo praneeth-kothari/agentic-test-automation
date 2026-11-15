@@ -3,11 +3,16 @@ import { test, expect } from "@playwright/test";
 const BASE_URL = "https://reqres.in/api";
 
 test.describe("API — Users", () => {
+<<<<<<< HEAD
   test("GET /users/2 — returns 200 with user data", async ({ request }) => {
+=======
+  test("GET /users/2 returns 200", async ({ request }) => {
+>>>>>>> 0546daedbc27954087e2c5e960ab030cab5db21b
     const response = await request.get(`${BASE_URL}/users/2`);
     expect(response.status()).toBe(200);
     const body = await response.json();
     expect(body.data).toHaveProperty("id", 2);
+<<<<<<< HEAD
     expect(body.data).toHaveProperty("email");
   });
 
@@ -25,10 +30,16 @@ test.describe("API — Users", () => {
   });
 
   test("POST /users — creates user with 201", async ({ request }) => {
+=======
+  });
+
+  test("POST /users creates user", async ({ request }) => {
+>>>>>>> 0546daedbc27954087e2c5e960ab030cab5db21b
     const response = await request.post(`${BASE_URL}/users`, {
       data: { name: "Praneeth", job: "QA Architect" },
     });
     expect(response.status()).toBe(201);
+<<<<<<< HEAD
     const body = await response.json();
     expect(body.name).toBe("Praneeth");
     expect(body).toHaveProperty("createdAt");
@@ -44,26 +55,45 @@ test.describe("API — Users", () => {
   });
 
   test("DELETE /users/2 — returns 204", async ({ request }) => {
+=======
+    expect((await response.json()).name).toBe("Praneeth");
+  });
+
+  test("DELETE /users/2 returns 204", async ({ request }) => {
+>>>>>>> 0546daedbc27954087e2c5e960ab030cab5db21b
     const response = await request.delete(`${BASE_URL}/users/2`);
     expect(response.status()).toBe(204);
   });
 });
 
+<<<<<<< HEAD
 test.describe("API — Authentication", () => {
   test("POST /login — returns token on success", async ({ request }) => {
+=======
+test.describe("API — Auth", () => {
+  test("POST /login returns token", async ({ request }) => {
+>>>>>>> 0546daedbc27954087e2c5e960ab030cab5db21b
     const response = await request.post(`${BASE_URL}/login`, {
       data: { email: "eve.holt@reqres.in", password: "cityslicka" },
     });
     expect(response.status()).toBe(200);
+<<<<<<< HEAD
     const body = await response.json();
     expect(body.token).toBeTruthy();
   });
 
   test("POST /login — 400 on missing password", async ({ request }) => {
+=======
+    expect((await response.json()).token).toBeTruthy();
+  });
+
+  test("POST /login 400 on missing password", async ({ request }) => {
+>>>>>>> 0546daedbc27954087e2c5e960ab030cab5db21b
     const response = await request.post(`${BASE_URL}/login`, {
       data: { email: "eve.holt@reqres.in" },
     });
     expect(response.status()).toBe(400);
+<<<<<<< HEAD
     expect((await response.json()).error).toBe("Missing password");
   });
 
@@ -79,3 +109,7 @@ test.describe("API — Authentication", () => {
     expect(response.headers()["content-type"]).toContain("application/json");
   });
 });
+=======
+  });
+});
+>>>>>>> 0546daedbc27954087e2c5e960ab030cab5db21b
