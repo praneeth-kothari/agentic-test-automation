@@ -37,8 +37,4 @@ export class LoginPage {
   async expectLoginSuccess() {
     await expect(this.page).toHaveURL(/.*inventory/);
   }
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> 0546daedbc27954087e2c5e960ab030cab5db21b

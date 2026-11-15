@@ -16,8 +16,4 @@ export const test = base.extend<PageFixtures>({
   },
 });
 
-<<<<<<< HEAD
 export { expect } from "@playwright/test";
-=======
-export { expect } from "@playwright/test";
->>>>>>> 0546daedbc27954087e2c5e960ab030cab5db21b

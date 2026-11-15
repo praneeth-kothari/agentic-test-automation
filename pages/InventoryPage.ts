@@ -31,8 +31,4 @@ export class InventoryPage {
   async getFirstItemName(): Promise<string> {
     return (await this.inventoryItems.first().locator(".inventory_item_name").textContent()) || "";
   }
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> 0546daedbc27954087e2c5e960ab030cab5db21b
