@@ -3,11 +3,12 @@
     "target": "ES2022",
     "module": "ESNext",
     "moduleResolution": "bundler",
+    "types": ["@playwright/test"],
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "outDir": "dist",
     "rootDir": "."
   },
-  "include": ["agents/**/*", "tests/**/*", "run.ts"]
+  "include": ["agents/**/*", "tests/**/*", "fixtures/**/*", "pages/**/*", "run.ts"]
 }
