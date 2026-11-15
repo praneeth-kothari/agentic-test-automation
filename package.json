@@ -1,0 +1,25 @@
+{
+  "name": "agentic-test-automation",
+  "version": "1.0.0",
+  "description": "Three core agents that plan, generate, and self-heal Playwright test suites",
+  "type": "module",
+  "scripts": {
+    "plan": "tsx agents/planner.ts",
+    "generate": "tsx agents/generator.ts",
+    "heal": "tsx agents/healer.ts",
+    "run:pipeline": "tsx run.ts",
+    "test": "playwright test",
+    "test:api": "playwright test tests/api/",
+    "test:ui": "playwright test tests/ --project=chromium"
+  },
+  "dependencies": {
+    "@playwright/test": "^1.44.0",
+    "allure-playwright": "^3.0.0",
+    "cheerio": "^1.0.0",
+    "tsx": "^4.0.0",
+    "typescript": "^5.4.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0"
+  }
+}
