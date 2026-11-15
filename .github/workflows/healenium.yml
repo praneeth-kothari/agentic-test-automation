@@ -1,0 +1,47 @@
+name: Healenium Self-Healing Demo
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'healenium/**'
+
+jobs:
+  healenium-demo:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Start Healenium backend + postgres
+        run: docker compose -f healenium/docker-compose.yml up -d
+
+      - name: Wait for backend to accept connections
+        run: |
+          for i in $(seq 1 30); do
+            if curl -sf http://localhost:8000/actuator/health > /dev/null 2>&1 || \
+               curl -sf http://localhost:8000 > /dev/null 2>&1; then
+              echo "Backend is up"; break
+            fi
+            echo "Waiting for backend ($i/30)"; sleep 2
+          done
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: maven
+
+      - name: Run self-healing test
+        working-directory: healenium
+        run: mvn -B clean test
+
+      - name: Dump Healenium backend logs
+        if: always()
+        run: docker compose -f healenium/docker-compose.yml logs --tail=100 healenium
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: healenium-reports
+          path: healenium/.healenium/
+          if-no-files-found: ignore

@@ -1,5 +1,8 @@
 # Agentic Test Automation
 
+[![Test Suite](https://github.com/praneeth-kothari/agentic-test-automation/actions/workflows/test-suite.yml/badge.svg)](https://github.com/praneeth-kothari/agentic-test-automation/actions/workflows/test-suite.yml)
+[![Healenium Demo](https://github.com/praneeth-kothari/agentic-test-automation/actions/workflows/healenium.yml/badge.svg)](https://github.com/praneeth-kothari/agentic-test-automation/actions/workflows/healenium.yml)
+
 **Three core agents that plan, generate, and self-heal Playwright test suites using POM.**
 
 | Agent | Persona | Input | Output |
@@ -26,6 +29,7 @@
 ├── tests/
 │   ├── ui/                    # UI tests using POM fixtures
 │   └── api/                   # API tests (REST, auth, headers)
+├── healenium/                 # Java/Selenium self-healing module (Healenium)
 ├── playwright.config.ts
 ├── run.ts                     # Pipeline orchestrator
 └── README.md
@@ -70,6 +74,37 @@ test("TC-001", async ({ loginPage, inventoryPage }) => {
 ## API Testing
 
 10 API tests against ReqRes.in covering CRUD, auth, headers, and response time.
+
+## Healenium Self-Healing (Java/Selenium module)
+
+Healenium works with **Selenium (Java) only** — there is no Playwright port.
+So this repo demonstrates self-healing in **both ecosystems**:
+
+| Layer | Implementation | Where |
+|---|---|---|
+| Selenium/Java | Healenium library + hlm-backend + postgres | [`healenium/`](healenium/) |
+| Playwright/TypeScript | Custom Healer agent (`Patch`) | `agents/healer.ts` |
+
+The demo runs two ordered phases against saucedemo.com:
+1. **Phase 1** — healthy locators log in; Healenium records element info in its backing store
+2. **Phase 2** — deliberately broken locators (`#user-name-wrong` etc.) are **healed at runtime** by scoring stored element info against the live DOM — login still succeeds
+
+```bash
+docker compose -f healenium/docker-compose.yml up -d
+cd healenium && mvn clean test
+```
+
+CI: the `Healenium Demo` workflow starts the docker stack, runs `mvn test`,
+dumps backend logs, and uploads healing reports as artifacts.
+
+## CI/CD
+
+Two GitHub Actions pipelines:
+
+| Workflow | Jobs |
+|---|---|
+| **Test Suite** | typecheck → UI tests (Chromium) → API tests → cross-browser matrix (Chromium + Firefox) |
+| **Healenium Demo** | docker compose backend → Java/Maven self-healing test → healing report artifacts |
 
 ## License
 
